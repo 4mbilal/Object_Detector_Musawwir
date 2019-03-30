@@ -18,3 +18,7 @@ M Bilal, A Khan, MUK Khan, CM Kyung, "A Low Complexity Pedestrian Detection Fram
 Please cite the above papers if you use the source codes in your own projects. 
 
 Muhammad Bilal (4mbilal@gmail.com)
+
+![Screenshot](curve2.png)
+![Screenshot](curve1.png)
+![Screenshot](visual_results.png)
