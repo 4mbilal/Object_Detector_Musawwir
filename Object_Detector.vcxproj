@@ -159,10 +159,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\lib\svm_light\svm_classify.c" />
-    <ClCompile Include="..\lib\svm_light\svm_common.c" />
-    <ClCompile Include="..\lib\svm_light\svm_hideo.c" />
-    <ClCompile Include="..\lib\svm_light\svm_learn.c" />
     <ClCompile Include="src\Dataset_Trainings.cpp" />
     <ClCompile Include="src\Dataset_Tests.cpp" />
     <ClCompile Include="src\Defines.cpp" />
@@ -174,6 +170,10 @@
     <ClCompile Include="src\NMS.cpp" />
     <ClCompile Include="src\SVM_interface.cpp" />
     <ClCompile Include="src\TwoD_Filters.cpp" />
+    <ClCompile Include="svm_light\svm_classify.c" />
+    <ClCompile Include="svm_light\svm_common.c" />
+    <ClCompile Include="svm_light\svm_hideo.c" />
+    <ClCompile Include="svm_light\svm_learn.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\lib\svm_light\kernel.h" />
@@ -187,6 +187,8 @@
     <ClInclude Include="src\NMS.h" />
     <ClInclude Include="src\SVM_interface.h" />
     <ClInclude Include="src\TwoD_Filters.h" />
+    <ClInclude Include="svm_light\svm_common.h" />
+    <ClInclude Include="svm_light\svm_learn.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

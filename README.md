@@ -1,7 +1,6 @@
 # Object_Detector_Musawwir
 A collection of object (originally pedestrian) detectors written in C++ (OpenCV). "Musawwir" means "Artist" in Urdu
 
-This repo contains source codes for two pedestrian detectors.
 
 1- Original HOG-Linear SVM (Navneet Dalal) Retrained: An improved bootstrapping algorithm gives up to 14% lower miss rate.
 
