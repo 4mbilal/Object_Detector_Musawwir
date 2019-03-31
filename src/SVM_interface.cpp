@@ -86,7 +86,7 @@ void SVM_Training(Musawwir_Obj_Detector &MOD, string TrainPosDirPath, string Tra
 				break;
 			}
 			for (i = 0; i < FeatureVectorLength; i++) {
-				examples[j][i] = int(FeatureVector[i] * MOD.Kernel_LUT_Q);//FeatureVector[i];// 
+				examples[j][i] = FeatureVector[i];// int(FeatureVector[i] * MOD.Kernel_LUT_Q);//
 				//height_hist[int(featureVector_HOG[i]*10000)]++;
 			}
 
@@ -121,7 +121,7 @@ void SVM_Training(Musawwir_Obj_Detector &MOD, string TrainPosDirPath, string Tra
 				break;
 			}
 			for (i = 0; i<FeatureVectorLength; i++) {
-				examples[j][i] = int(FeatureVector[i] * MOD.Kernel_LUT_Q);//FeatureVector[i];// 
+				examples[j][i] = FeatureVector[i];// int(FeatureVector[i] * MOD.Kernel_LUT_Q);//
 				//height_hist[int(featureVector_HOG[i] * 10000)]++;
 			}
 			labels[j] = -1;		//-1 for negative examples
@@ -133,8 +133,27 @@ void SVM_Training(Musawwir_Obj_Detector &MOD, string TrainPosDirPath, string Tra
 
 	printf("\n\t->SVM Training started");
 	printf("\nExample Count = %d", examples_count);
-	//Soft_SVM_C_ratio = 1;// float(cn) / float(cp);//
-	printf("\nSoft C ratio = %.2f", Soft_SVM_C_ratio);
+	printf("\nFeatureVectorLength = %d", FeatureVectorLength);
+
+	//----------------------------------------------------------------------------------------
+	//Write features on disk for evaluation by Matlab
+	/*ofstream feature_file("E:\\RnD\\Current_Projects\\Musawwir\\Frameworks\\SW\\Dataset\\Person\\train\\features_dump.dat", std::ios::out | std::ios::binary);
+	float temp;
+	temp = examples_count;
+	feature_file.write((const char *)&temp, sizeof(float));
+	temp = FeatureVectorLength;
+	feature_file.write((const char *)&temp, sizeof(float));
+	for (int j = 0; j < examples_count; j++) {
+		for (int k = 0; k < FeatureVectorLength; k++) {
+			temp = examples[j][k];
+			feature_file.write((const char *)&temp, sizeof(float));
+		}
+		temp = labels[j];
+		feature_file.write((const char *)&temp, sizeof(float));
+	}
+	feature_file.close();*/
+	//----------------------------------------------------------------------------------------
+
 	SVM_Train(SVM_Model_FilePath.c_str(), examples, labels, FeatureVectorLength, examples_count);// , win_R, win_C, grayscale);
 	printf("\n\t->SVM Training finished!");
 	printf("\n\n.....................................................................");

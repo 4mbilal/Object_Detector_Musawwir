@@ -2,8 +2,6 @@
 /*
 								Global Variables and Defines
 */
-string Object_Detector_SW_Ver = "Ver 5.0 (20-05-2017)";
-
 string MainDir = "E:\\RnD\\Current_Projects\\Musawwir\\Frameworks\\SW\\Dataset\\Person\\";
 
 //Training Specific Variables
@@ -14,7 +12,7 @@ string MainDir = "E:\\RnD\\Current_Projects\\Musawwir\\Frameworks\\SW\\Dataset\\
 	int persistent_hard_ex_cnt = 0;						//Number of hard examples already in the pool
 
 	//SVM Model
-	int Model_Kernel_Type = 4;		//0-Linear, 4-HIK
+	int Model_Kernel_Type = 0;		//0-Linear, 4-HIK
 	//const char* svm_file_name = "SVM_Data\\PD_HIK_INRIA(Q_24_NoAvg_c=0.0001).svm";
 	const char* svm_liner_wts_file_name = "E:\\RnD\\Current_Projects\\Musawwir\\Frameworks\\SW\\Musawwir_SW_VS\\Object_Detector\\src\\SVM_Linear_Wts.h";
 	const char* svm_kernel_lut_file_name = "src\\SVM_HIK_LUT.h";

@@ -347,6 +347,8 @@ void svm_learn_classification(DOC **docs, double *class, long int
     }
   }
 
+  //getchar();
+  //verbosity = 1;
 
   /* leave-one-out testing starts now */
   if(learn_parm->compute_loo) {

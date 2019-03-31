@@ -1,0 +1,9 @@
+clear all
+close all
+clc
+
+fid = fopen('E:\RnD\Current_Projects\Musawwir\Frameworks\SW\Dataset\Person\train\features_dump.dat')
+values = fread(fid,'single');
+fclose(fid);
+l = length(values);
+

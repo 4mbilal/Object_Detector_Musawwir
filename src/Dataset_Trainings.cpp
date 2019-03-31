@@ -124,7 +124,7 @@ void Training_Master(Musawwir_Obj_Detector &MOD){
 //	Rect crop(16, 16, 64, 128);//(8, 8, 32, 64);// (24, 20, 48, 120); //
 //	Create_Pos_Training_Images(Pos_Full_Img_Src_Dir, Pos_Train_Img_Dst_Dir, 1, crop);
 
-//	SVM_Training(MOD, Pos_Train_Img_Dst_Dir, Neg_Train_Img_Dst_Dir, SVM_Model_FilePath);
+	SVM_Training(MOD, Pos_Train_Img_Dst_Dir, Neg_Train_Img_Dst_Dir, SVM_Model_FilePath);
 	MOD.Fill_SVM_Wts(SVM_Model_FilePath);
 //	Purge_Examples(MOD, Neg_Train_Img_Dst_Dir, 0, 0);
 	return;
