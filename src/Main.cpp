@@ -5,6 +5,7 @@
 //#include "SVM_Demo.h"
 #include "Dataset_Trainings.h"
 #endif
+#include "SVM_Wts_Matlab.h"
 void float_companding_test(void);
 
 
@@ -47,7 +48,8 @@ int main(void)
 	if (Obj_Det.Active_Detector_Obj == Obj_Det.HOG_OpenCV) {
 		Obj_Det.Feature_Vec_Length = (*Obj_Det.HOG_OpenCV_Obj).getDescriptorSize();
 		Obj_Det.SVM_Type = Obj_Det.SVM_Linear;	//Only Linear supported by default OCV implementation
-		(*Obj_Det.HOG_OpenCV_Obj).setSVMDetector(HOGDescriptor_Mod::HOG_Optimal_64_128());		//Retrained model
+//		(*Obj_Det.HOG_OpenCV_Obj).setSVMDetector(HOGDescriptor_Mod::HOG_Optimal_64_128());		//Retrained model
+		(*Obj_Det.HOG_OpenCV_Obj).setSVMDetector(Matlab_SVM_Model());	//Matlab model
 		//(*Obj_Det.HOG_OpenCV_Obj).setSVMDetector(HOGDescriptor::getDefaultPeopleDetector());	//OCV default model
 	}
 	else if (Obj_Det.Active_Detector_Obj == Obj_Det.HOG_OpenCV_Mod) {
@@ -64,14 +66,14 @@ int main(void)
 //	-----------------------------------------------------------------------------------------------------------------
 //  Step 4- Training
 //	printf("\n\tFeature Vector Size = %d", Obj_Det.Feature_Vec_Length);
-	Training_Master(Obj_Det);
+//	Training_Master(Obj_Det);
 	//	goto finish;
 
 
 //	-----------------------------------------------------------------------------------------------------------------
 //  Step 5- Testing on Datasets etc.
 	Obj_Det.Dataset = Obj_Det.Ped_INRIA;		//288 frames	8274(USA) 4024(USA-Test) 4250(USA-Train)
-//	Obj_Det.Process_Test_Datasets("HSG");
+	Obj_Det.Process_Test_Datasets("HSG");
 
 	Obj_Det.Dataset = Obj_Det.Ped_ETH;			//1804 frames
 	//Obj_Det.Process_Test_Datasets("HSG");

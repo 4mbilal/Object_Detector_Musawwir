@@ -137,7 +137,7 @@ void SVM_Training(Musawwir_Obj_Detector &MOD, string TrainPosDirPath, string Tra
 
 	//----------------------------------------------------------------------------------------
 	//Write features on disk for evaluation by Matlab
-	/*ofstream feature_file("E:\\RnD\\Current_Projects\\Musawwir\\Frameworks\\SW\\Dataset\\Person\\train\\features_dump.dat", std::ios::out | std::ios::binary);
+	ofstream feature_file("E:\\RnD\\Current_Projects\\Musawwir\\Frameworks\\SW\\Dataset\\Person\\train\\features_dump.dat", std::ios::out | std::ios::binary);
 	float temp;
 	temp = examples_count;
 	feature_file.write((const char *)&temp, sizeof(float));
@@ -151,7 +151,7 @@ void SVM_Training(Musawwir_Obj_Detector &MOD, string TrainPosDirPath, string Tra
 		temp = labels[j];
 		feature_file.write((const char *)&temp, sizeof(float));
 	}
-	feature_file.close();*/
+	feature_file.close();
 	//----------------------------------------------------------------------------------------
 
 	SVM_Train(SVM_Model_FilePath.c_str(), examples, labels, FeatureVectorLength, examples_count);// , win_R, win_C, grayscale);
