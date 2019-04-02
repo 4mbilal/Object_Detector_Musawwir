@@ -24,8 +24,8 @@ string MainDir = "E:\\RnD\\Current_Projects\\Musawwir\\Frameworks\\SW\\Dataset\\
 	double** Kernel_LUT;		//LUT for discrete Kernel evaluation
 
 	const char* svm_file_name = "SVM_Data\\HOG_HIK.svm";//{ 102, 36 }
-	double C_Pos = 10000e-6;
-	double C_Neg = 10000e-6;
+	double C_Pos = 20000e-6;
+	double C_Neg = 20000e-6;
 	double Soft_SVM_C = C_Neg;
 	double Soft_SVM_C_ratio = C_Pos / C_Neg;
 

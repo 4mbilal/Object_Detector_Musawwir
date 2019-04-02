@@ -30,7 +30,9 @@ void save_SVM(MODEL *model, const char* filename);// , int win_R, int win_C, cha
 void load_SVM(const char* filename, int &feature_size, int &sv_num, double**& supvec, double*& alpha, double &b, double*& ASV);// , int &win_R, int &win_C, char &grayscale);
 void ConvToDOC(double** examples, DOC ***docs, long int totwords, long int totdoc);
 void set_input_parameters(LEARN_PARM *learn_parm,KERNEL_PARM *kernel_parm);
-void SVM_Train(const char* svm_file_name, double** examples, double* labels, long totwords, long totdoc);// , int win_R, int win_C, char grayscale);
+float SVM_Train(const char* svm_file_name, double** examples, double* labels, long totwords, long totdoc);// , int win_R, int win_C, char grayscale);
 float Kernel_LUT_Dist(float* ex);
 void Build_Kernel_LUT(void);
 void filter_LP_LUT(void);
+
+void SVM_Param_Grid_Search(const char* svm_file_name, double** examples, double* labels, long totwords, long totdoc);

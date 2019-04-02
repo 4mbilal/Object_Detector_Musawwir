@@ -2,10 +2,6 @@
 #include "HSG_HIK.h"
 #include"hog_mod.h"
 
-//Global Variables
-//vector<double> FP_scores;
-//vector<double> TP_scores;
-
 /*			Delete '1' out of every 'step' files in the directory 'DirPath'			*/
 void Delete_Files_In_A_Dir(string DirPath, int step) {
 	char SaveCurrentPath[FILENAME_MAX];
@@ -390,42 +386,3 @@ void Purge_Examples(Musawwir_Obj_Detector &MOD, string Neg_Train_Img_Dst_Dir, in
 	_findclose(hFile);
 }
 
-void read_annotations(vector<Rect>& Ann_Rects, char* ann_file_path, int min_height, float min_overlap) {
-	ifstream ann_file;
-	char read_line[50];
-	char label[10];
-	int occl;
-	Rect r, v;
-	ann_file.open(ann_file_path);
-
-	ann_file.getline(read_line, 100);	//Read first line
-										//	cout << endl << read_line;
-
-	while (ann_file.getline(read_line, 100)) {//Read annotations
-		label[6] = 0;
-		sprintf(label, "%s", strtok(read_line, " "));
-		//printf("\nLabel = %s", label);			//person, person-fa, person?, people (Ignore all but the first type)
-		if (label[6] == '?') continue;
-		if (label[2] == 'o') continue;
-		if (label[6] == '-') continue;
-		r.x = stoi(strtok(NULL, " "), NULL, 10);
-		r.y = stoi(strtok(NULL, " "), NULL, 10);
-		r.width = stoi(strtok(NULL, " "), NULL, 10);
-		r.height = stoi(strtok(NULL, " "), NULL, 10);
-		occl = stoi(strtok(NULL, " "), NULL, 10);
-		v.x = stoi(strtok(NULL, " "), NULL, 10);
-		v.y = stoi(strtok(NULL, " "), NULL, 10);
-		v.width = stoi(strtok(NULL, " "), NULL, 10);
-		v.height = stoi(strtok(NULL, " "), NULL, 10);
-		//printf("\nRect = %d, %d, %d, %d", r.x, r.y, r.width, r.height);
-		if (r.height >= min_height) {
-			if (occl == 1) {
-				Rect ol = r&v;		//overlap between gt and visible ann
-				if (ol.area() >= min_overlap*r.area())
-					Ann_Rects.push_back(r);
-			}
-			else
-				Ann_Rects.push_back(r);
-		}
-	}
-}

@@ -137,7 +137,7 @@ void SVM_Training(Musawwir_Obj_Detector &MOD, string TrainPosDirPath, string Tra
 
 	//----------------------------------------------------------------------------------------
 	//Write features on disk for evaluation by Matlab
-	ofstream feature_file("E:\\RnD\\Current_Projects\\Musawwir\\Frameworks\\SW\\Dataset\\Person\\train\\features_dump.dat", std::ios::out | std::ios::binary);
+	/*ofstream feature_file("E:\\RnD\\Current_Projects\\Musawwir\\Frameworks\\SW\\Dataset\\Person\\train\\features_dump.dat", std::ios::out | std::ios::binary);
 	float temp;
 	temp = examples_count;
 	feature_file.write((const char *)&temp, sizeof(float));
@@ -151,11 +151,12 @@ void SVM_Training(Musawwir_Obj_Detector &MOD, string TrainPosDirPath, string Tra
 		temp = labels[j];
 		feature_file.write((const char *)&temp, sizeof(float));
 	}
-	feature_file.close();
+	feature_file.close();*/
 	//----------------------------------------------------------------------------------------
-
-	SVM_Train(SVM_Model_FilePath.c_str(), examples, labels, FeatureVectorLength, examples_count);// , win_R, win_C, grayscale);
+	//SVM_Param_Grid_Search(SVM_Model_FilePath.c_str(), examples, labels, FeatureVectorLength, examples_count);
+	MOD.SVM_training_error = SVM_Train(SVM_Model_FilePath.c_str(), examples, labels, FeatureVectorLength, examples_count);// , win_R, win_C, grayscale);
 	printf("\n\t->SVM Training finished!");
+	printf("\n\t\t%.2f", MOD.SVM_training_error);
 	printf("\n\n.....................................................................");
 	//-------------- Release memory ---------------------------------------------------------------
 
@@ -170,6 +171,19 @@ void SVM_Training(Musawwir_Obj_Detector &MOD, string TrainPosDirPath, string Tra
 	stats_file << x << ",\t" << height_hist[x]<<endl;
 	}
 	stats_file.close();*/
+}
+
+void SVM_Param_Grid_Search(const char* svm_file_name, double** examples, double* labels, long totwords, long totdoc) {
+
+	float e1 = 0, e2 = 0, e3 = 0;
+	Soft_SVM_C = 20000e-6;
+	e1 = SVM_Train(svm_file_name, examples, labels, totwords, totdoc);
+	/*Soft_SVM_C = 1000e-6;
+	e2 = SVM_Train(svm_file_name, examples, labels, totwords, totdoc);
+	Soft_SVM_C = 100e-6;
+	e3 = SVM_Train(svm_file_name, examples, labels, totwords, totdoc);*/
+
+	printf("\n\n\tE1 = %.2f, E2 = %.2f, E3 = %.2f", e1, e2, e3);
 }
 
 void Musawwir_Obj_Detector::Fill_SVM_Wts(string SVM_Model_FilePath) {
@@ -805,7 +819,7 @@ float svm_dist_f(double *Data){	//overloaded function for double inputs
 	return(dist-b_f);
 }
 
-void SVM_Train(const char* svm_file_name, double** examples, double* labels, long totwords,long totdoc)//, int win_R, int win_C, char grayscale)
+float SVM_Train(const char* svm_file_name, double** examples, double* labels, long totwords,long totdoc)//, int win_R, int win_C, char grayscale)
 {
 	DOC **docs;  /* training examples */
 	double *alpha_in=NULL;		//What is this?
@@ -843,13 +857,13 @@ void SVM_Train(const char* svm_file_name, double** examples, double* labels, lon
 
 	//write_model("G:\\svm.txt", &model);								//original SVM complete model (ASCII)
 	save_SVM(&model, svm_file_name);// , win_R, win_C, grayscale);		//relevant svm values (Binary)
-
+	float training_error = model.loo_error;
 
 	//Free memory
 	for (int i = 0; i < totdoc; i++) {
 		free_example((docs)[i], 1);
 	}
-
+	return training_error;
 }
 
 void ConvToDOC(double** examples, DOC ***docs, long int totwords, long int totdoc)

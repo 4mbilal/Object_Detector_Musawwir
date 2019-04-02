@@ -26,6 +26,19 @@ public:
 	int Kernel_LUT_Q;
 	int Dataset;
 
+	//Dataset evaluations
+	float SVM_training_error;
+	bool load_show_annotations=0;
+	vector<double> FP_scores;
+	vector<double> TP_scores;
+	int frame_cnt = 0;
+	int total_detections = 0;
+	int total_objects = 0;
+	int* ftp;
+	float* fp;
+	float* tp;
+	float lamr = 0;
+
 	virtual void Fill_SVM_Wts(string SVM_Model_FilePath);
 	virtual void Fill_SVM_Wts_LUT();
 	virtual void Process_Test_Datasets(string Exp);
