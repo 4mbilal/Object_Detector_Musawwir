@@ -66,24 +66,26 @@ int main(void)
 //	-----------------------------------------------------------------------------------------------------------------
 //  Step 4- Training
 //	printf("\n\tFeature Vector Size = %d", Obj_Det.Feature_Vec_Length);
-//	Training_Master(Obj_Det);
+	Training_Master(Obj_Det);
 	//	goto finish;
 
 //	-----------------------------------------------------------------------------------------------------------------
-//  Step 5- Testing on Datasets etc.
-	Obj_Det.load_show_annotations = 1;
-	Obj_Det.FP_scores.clear();
-	Obj_Det.TP_scores.clear();
+//  Step 5- Grid Search for Optimal SVM values.
+//	Grid_Search_SVM_Parameters(Obj_Det);
+
+//	-----------------------------------------------------------------------------------------------------------------
+//  Step 6- Testing on Datasets etc.
+//	Obj_Det.load_show_annotations = 1;
+	Obj_Det.monitor_detections = 1;
 
 	Obj_Det.Dataset = Obj_Det.Ped_INRIA;		//288 frames	8274(USA) 4024(USA-Test) 4250(USA-Train)
-	Obj_Det.Process_Test_Datasets("HSG");
-	printf("\n\n\t Dataset LAMR = %.2f", Obj_Det.lamr);
+//	Obj_Det.Process_Test_Datasets("HSG");
 
 	Obj_Det.Dataset = Obj_Det.Ped_ETH;			//1804 frames
-	//Obj_Det.Process_Test_Datasets("HSG");
+	Obj_Det.Process_Test_Datasets("HSG");
 
 	Obj_Det.Dataset = Obj_Det.Ped_TUDBrussels;	//508 frames
-	//Obj_Det.Process_Test_Datasets("HSG-HIK");
+//	Obj_Det.Process_Test_Datasets("HSG");
 
 	//	goto finish;
 

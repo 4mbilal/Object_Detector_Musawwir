@@ -19,5 +19,6 @@ void LUT_CSV(void);
 void Detect_Caltech_format(Musawwir_Obj_Detector &MOD);
 void Caltech_res_files_generation(Mat& img, Musawwir_Obj_Detector &MOD, char* res_path, char* ann_path);
 void read_annotations(vector<Rect>& Ann_Rects, char* ann_file_path, int min_height, float min_overlap);
+void Grid_Search_SVM_Parameters(Musawwir_Obj_Detector &MOD);
 
 #endif

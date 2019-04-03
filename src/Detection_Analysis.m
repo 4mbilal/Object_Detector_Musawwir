@@ -1,12 +1,20 @@
 clear all
 clc
 close all
+
+LUT2 = csvread('E:\RnD\Current_Projects\Musawwir\Frameworks\SW\Dataset\Person\Caltech\code\data-INRIA\res\HSG_MR_FPPI.csv');
+MR2 = LUT2(1,:)';
+FPPI2 = LUT2(2,:)';
+loglog(FPPI2,MR2)
+exp(mean(log(MR2)))
+
+
 total = 530;
 frames = 288;
 LUT = csvread('E:\RnD\Current_Projects\Musawwir\Frameworks\SW\Dataset\Person\Caltech\code\data-INRIA\res\HSG_Detection_Stats.csv');
 % pause
-FP = LUT(1,1:139);
-TP = LUT(2,1:401);
+FP = LUT(1,1:160);
+TP = LUT(2,1:429);
 
 
 FP = [FP',zeros(length(FP),1)];
@@ -31,11 +39,6 @@ loglog(FPPI,MR)
 % ax.YTick = [.05 .1:.1:.5 .64 .8];
 
 %Same functionality but implemented in C++
-LUT2 = csvread('E:\RnD\Current_Projects\Musawwir\Frameworks\SW\Dataset\Person\Caltech\code\data-INRIA\res\HSG_MR_FPPI.csv');
-MR2 = LUT2(1,:)';
-FPPI2 = LUT2(2,:)';
-figure
-loglog(FPPI2,MR2)
-mean(log(MR2))
+
 
 

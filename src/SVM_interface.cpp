@@ -156,7 +156,7 @@ void SVM_Training(Musawwir_Obj_Detector &MOD, string TrainPosDirPath, string Tra
 	//SVM_Param_Grid_Search(SVM_Model_FilePath.c_str(), examples, labels, FeatureVectorLength, examples_count);
 	MOD.SVM_training_error = SVM_Train(SVM_Model_FilePath.c_str(), examples, labels, FeatureVectorLength, examples_count);// , win_R, win_C, grayscale);
 	printf("\n\t->SVM Training finished!");
-	printf("\n\t\t%.2f", MOD.SVM_training_error);
+	//printf("\n\t\t%.2f", MOD.SVM_training_error);
 	printf("\n\n.....................................................................");
 	//-------------- Release memory ---------------------------------------------------------------
 
@@ -173,18 +173,21 @@ void SVM_Training(Musawwir_Obj_Detector &MOD, string TrainPosDirPath, string Tra
 	stats_file.close();*/
 }
 
-void SVM_Param_Grid_Search(const char* svm_file_name, double** examples, double* labels, long totwords, long totdoc) {
-
+/*void SVM_Param_Grid_Search(const char* svm_file_name, double** examples, double* labels, long totwords, long totdoc) {
+	//This function is not very useful for the following reasons.
+	//1- Xi-Alpha is not reliable at all as the error metric.
+	//2- LOOC is reliable and gives some promising optimal point but is TOO time consuming.
+	//3- A better way is to write the features to disk and evaluate in Matlab (Matlab_SVM_Interface.m)
 	float e1 = 0, e2 = 0, e3 = 0;
 	Soft_SVM_C = 20000e-6;
 	e1 = SVM_Train(svm_file_name, examples, labels, totwords, totdoc);
-	/*Soft_SVM_C = 1000e-6;
+	Soft_SVM_C = 1000e-6;
 	e2 = SVM_Train(svm_file_name, examples, labels, totwords, totdoc);
 	Soft_SVM_C = 100e-6;
-	e3 = SVM_Train(svm_file_name, examples, labels, totwords, totdoc);*/
+	e3 = SVM_Train(svm_file_name, examples, labels, totwords, totdoc);
 
 	printf("\n\n\tE1 = %.2f, E2 = %.2f, E3 = %.2f", e1, e2, e3);
-}
+}*/
 
 void Musawwir_Obj_Detector::Fill_SVM_Wts(string SVM_Model_FilePath) {
 	switch (Active_Detector_Obj) {
@@ -857,7 +860,7 @@ float SVM_Train(const char* svm_file_name, double** examples, double* labels, lo
 
 	//write_model("G:\\svm.txt", &model);								//original SVM complete model (ASCII)
 	save_SVM(&model, svm_file_name);// , win_R, win_C, grayscale);		//relevant svm values (Binary)
-	float training_error = model.loo_error;
+	float training_error = model.xa_error;
 
 	//Free memory
 	for (int i = 0; i < totdoc; i++) {

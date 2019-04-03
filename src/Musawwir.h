@@ -29,12 +29,12 @@ public:
 	//Dataset evaluations
 	float SVM_training_error;
 	bool load_show_annotations=0;
+	bool monitor_detections = 0;
 	vector<double> FP_scores;
 	vector<double> TP_scores;
 	int frame_cnt = 0;
 	int total_detections = 0;
 	int total_objects = 0;
-	int* ftp;
 	float* fp;
 	float* tp;
 	float lamr = 0;

@@ -106,6 +106,40 @@ void Create_Pos_Training_Images(string Pos_Full_Img_Src_Dir, string Pos_Train_Im
 string INRIA_Train_Neg = "INRIA\\Train\\neg\\";
 string INRIA_Train_Pos = "INRIA\\96X160H96\\Train\\pos\\";
 
+
+void Grid_Search_SVM_Parameters(Musawwir_Obj_Detector &MOD) {
+	string Pos_Train_Img_Dst_Dir = MainDir + "train\\pos\\";
+	string Neg_Train_Img_Dst_Dir = MainDir + "train\\neg\\";
+	string SVM_Model_FilePath = MainDir + "SVM_Data\\HOG_LSVM.svm";
+
+	float err[12];
+	err[0] = err[1] = err[2] = err[3] = err[4] = err[5] = err[6] = err[7] = err[8] = err[9] = err[10] = err[11] = 0;
+
+	MOD.load_show_annotations = 1;
+	MOD.monitor_detections = 0;
+	MOD.Dataset = MOD.Ped_INRIA;		//288 frames	8274(USA) 4024(USA-Test) 4250(USA-Train)
+
+	float var1 = 0.35;
+	float var1_step = 0.05;
+	float var1_stop = 0.2;
+
+	Soft_SVM_C_ratio = 1;
+	Soft_SVM_C = 19500e-6;
+
+	int ctr = 0;
+	while (var1 > var1_stop) {
+		Soft_SVM_C_ratio = var1;
+		SVM_Training(MOD, Pos_Train_Img_Dst_Dir.c_str(), Neg_Train_Img_Dst_Dir, SVM_Model_FilePath);
+		MOD.Fill_SVM_Wts(SVM_Model_FilePath);
+		MOD.Process_Test_Datasets("HSG");
+		err[ctr++] = MOD.lamr;
+		var1 = var1 - var1_step;
+	}
+
+	printf("\n\n\t%.2f, %.2f, %.2f, %.2f, %.2f, %.2f, %.2f, %.2f, %.2f, %.2f, %.2f, %.2f", err[0], err[1], err[2], err[3], err[4], err[5], err[6], err[7], err[8], err[9], err[10], err[11]);
+	getchar();
+}
+
 void Training_Master(Musawwir_Obj_Detector &MOD){
 	string Pos_Full_Img_Src_Dir = MainDir + INRIA_Train_Pos;
 	string Neg_Full_Img_Src_Dir = MainDir + INRIA_Train_Neg;
@@ -120,7 +154,7 @@ void Training_Master(Musawwir_Obj_Detector &MOD){
 //	Rect crop(16, 16, 64, 128);//(8, 8, 32, 64);// (24, 20, 48, 120); //
 //	Create_Pos_Training_Images(Pos_Full_Img_Src_Dir, Pos_Train_Img_Dst_Dir, 1, crop);
 
-	SVM_Training(MOD, Pos_Train_Img_Dst_Dir, Neg_Train_Img_Dst_Dir, SVM_Model_FilePath);
+//	SVM_Training(MOD, Pos_Train_Img_Dst_Dir, Neg_Train_Img_Dst_Dir, SVM_Model_FilePath);
 	MOD.Fill_SVM_Wts(SVM_Model_FilePath);
 //	Purge_Examples(MOD, Neg_Train_Img_Dst_Dir, 0, 0);
 	return;
