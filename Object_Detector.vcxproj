@@ -154,7 +154,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>$(OPENCV_DIR)\x64\vc14\lib; </AdditionalLibraryDirectories>
-      <AdditionalDependencies>opencv_calib3d343.lib;opencv_core343.lib;opencv_features2d343.lib;opencv_flann343.lib;opencv_highgui343.lib;opencv_imgcodecs343.lib;opencv_imgproc343.lib;opencv_ml343.lib;opencv_objdetect343.lib;opencv_photo343.lib;opencv_shape343.lib;opencv_stitching343.lib;opencv_superres343.lib;opencv_video343.lib;opencv_videoio343.lib;opencv_videostab343.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opencv_calib3d343.lib;opencv_core343.lib;opencv_dnn343.lib;opencv_features2d343.lib;opencv_flann343.lib;opencv_highgui343.lib;opencv_imgcodecs343.lib;opencv_imgproc343.lib;opencv_ml343.lib;opencv_objdetect343.lib;opencv_photo343.lib;opencv_shape343.lib;opencv_stitching343.lib;opencv_superres343.lib;opencv_video343.lib;opencv_videoio343.lib;opencv_videostab343.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <Profile>true</Profile>
     </Link>
   </ItemDefinitionGroup>
@@ -168,6 +168,7 @@
     <ClCompile Include="src\Image_Utilities.cpp" />
     <ClCompile Include="src\Main.cpp" />
     <ClCompile Include="src\NMS.cpp" />
+    <ClCompile Include="src\CNN_YOLO.cpp" />
     <ClCompile Include="src\SVM_interface.cpp" />
     <ClCompile Include="src\TwoD_Filters.cpp" />
     <ClCompile Include="svm_light\svm_classify.c" />

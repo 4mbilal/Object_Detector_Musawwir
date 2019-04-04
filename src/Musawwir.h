@@ -2,16 +2,20 @@
 #define __MUSAWWIR____
 #include "Defines.h"
 
+using namespace dnn;
+
 struct Musawwir_Obj_Detector
 {
 public:
 	enum { Face, Pedestrian, Car };
 	enum { Ped_INRIA, Ped_ETH, Ped_TUDBrussels, Ped_USA, Ped_USA_Train, Ped_USA_Test };
-	enum { HSG, HOG_OpenCV, HOG_OpenCV_Mod };
+	enum { HSG, HOG_OpenCV, HOG_OpenCV_Mod, CNN_YOLO };
 	enum { SVM_Linear, SVM_Poly, SVM_RBF, SVM_Sigmoid, SVM_HIK };		//These numbers correspond to those listed in SVM-Light library
 	HOGDescriptor_Mod *HOG_OpenCV_Mod_Obj;
 	HOGDescriptor *HOG_OpenCV_Obj;
 	HSGDetector *HSG_Obj;
+	Net *CNN_YOLO_Obj;
+	vector<string> CNN_Classes;
 	int Active_Detector_Obj;
 	int Active_Obj_Type;
 	int SVM_Type;
@@ -42,6 +46,7 @@ public:
 	virtual void Fill_SVM_Wts(string SVM_Model_FilePath);
 	virtual void Fill_SVM_Wts_LUT();
 	virtual void Process_Test_Datasets(string Exp);
+	virtual void CNN_YOLO_Detector(Net *CNN_YOLO_Obj, Mat& Frame, vector<Rect>& BB_Rects, vector<double>& BB_Scores);
 };
 
 #endif

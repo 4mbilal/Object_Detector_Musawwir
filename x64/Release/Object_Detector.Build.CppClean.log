@@ -1,6 +1,7 @@
 e:\rnd\current_projects\musawwir\frameworks\sw\musawwir_sw_vs\object_detector\x64\release\vc140.pdb
 e:\rnd\current_projects\musawwir\frameworks\sw\musawwir_sw_vs\object_detector\x64\release\twod_filters.obj
 e:\rnd\current_projects\musawwir\frameworks\sw\musawwir_sw_vs\object_detector\x64\release\svm_interface.obj
+e:\rnd\current_projects\musawwir\frameworks\sw\musawwir_sw_vs\object_detector\x64\release\object_detection_yolo.obj
 e:\rnd\current_projects\musawwir\frameworks\sw\musawwir_sw_vs\object_detector\x64\release\nms.obj
 e:\rnd\current_projects\musawwir\frameworks\sw\musawwir_sw_vs\object_detector\x64\release\main.obj
 e:\rnd\current_projects\musawwir\frameworks\sw\musawwir_sw_vs\object_detector\x64\release\image_utilities.obj
@@ -14,6 +15,7 @@ e:\rnd\current_projects\musawwir\frameworks\sw\musawwir_sw_vs\object_detector\x6
 e:\rnd\current_projects\musawwir\frameworks\sw\musawwir_sw_vs\object_detector\x64\release\svm_hideo.obj
 e:\rnd\current_projects\musawwir\frameworks\sw\musawwir_sw_vs\object_detector\x64\release\svm_common.obj
 e:\rnd\current_projects\musawwir\frameworks\sw\musawwir_sw_vs\object_detector\x64\release\svm_classify.obj
+e:\rnd\current_projects\musawwir\frameworks\sw\musawwir_sw_vs\object_detector\x64\release\cnn_yolo.obj
 e:\rnd\current_projects\musawwir\frameworks\sw\musawwir_sw_vs\x64\release\object_detector.exe
 e:\rnd\current_projects\musawwir\frameworks\sw\musawwir_sw_vs\x64\release\object_detector.ipdb
 e:\rnd\current_projects\musawwir\frameworks\sw\musawwir_sw_vs\x64\release\object_detector.iobj

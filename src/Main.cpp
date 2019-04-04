@@ -7,10 +7,11 @@
 #endif
 #include "SVM_Wts_Matlab.h"
 void float_companding_test(void);
-
+extern int Yolo_V3_test();
 
 int main(void)
 {
+	//Yolo_V3_test();
 	printf("\n*-*-*-*-*-*-*--- Object Detection Framework ---*-*-*-*-*-*-*\n");
 //	-----------------------------------------------------------------------------------------------------------------
 //	Step 1- Fill the full scale detector specs 
@@ -21,8 +22,8 @@ int main(void)
 	Obj_Det.Detection_Threshold = 0;
 
 //	-----------------------------------------------------------------------------------------------------------------
-//	Step 2- Select the Feature
-	Obj_Det.Active_Detector_Obj = Obj_Det.HOG_OpenCV;		//Options are HSG, HOG_OpenCV, HOG_OpenCV_Mod
+//	Step 2- Select the Feature (or the NN Framework e.g. YOLO)
+	Obj_Det.Active_Detector_Obj = Obj_Det.CNN_YOLO;		//Options are HSG, HOG_OpenCV, HOG_OpenCV_Mod, CNN_YOLO
 
 	if (Obj_Det.Active_Detector_Obj == Obj_Det.HOG_OpenCV) {
 		Obj_Det.HOG_OpenCV_Obj = new HOGDescriptor;
@@ -40,9 +41,12 @@ int main(void)
 	else if (Obj_Det.Active_Detector_Obj == Obj_Det.HSG) {
 		Obj_Det.HSG_Obj = new HSGDetector;	//instantiate an HSG object with default settings. 
 	}
+	else if (Obj_Det.Active_Detector_Obj == Obj_Det.CNN_YOLO) {
+		Obj_Det.CNN_YOLO_Obj = new Net;
+	}
 
 //	-----------------------------------------------------------------------------------------------------------------
-//  Step 3- Select the Classifier Type
+//  Step 3- Select the Classifier Type  (or the NN configuration and weights)
 	Obj_Det.Active_Obj_Type = Obj_Det.Pedestrian;	//Not used yet, for expansion into multiple objects
 
 	if (Obj_Det.Active_Detector_Obj == Obj_Det.HOG_OpenCV) {
@@ -62,11 +66,25 @@ int main(void)
 	else if (Obj_Det.Active_Detector_Obj == Obj_Det.HSG) {
 		//Default Settings
 	}
+	else if (Obj_Det.Active_Detector_Obj == Obj_Det.CNN_YOLO) {
+		// Load the network
+		String modelConfiguration = "E:\\RnD\\Current_Projects\\Musawwir\\Frameworks\\SW\\CNN\\yolov3.cfg";
+		String modelWeights = "E:\\RnD\\Current_Projects\\Musawwir\\Frameworks\\SW\\CNN\\yolov3.weights";
+		(*Obj_Det.CNN_YOLO_Obj) = readNetFromDarknet(modelConfiguration, modelWeights);
+		(*Obj_Det.CNN_YOLO_Obj).setPreferableBackend(DNN_BACKEND_OPENCV);
+		(*Obj_Det.CNN_YOLO_Obj).setPreferableTarget(DNN_TARGET_CPU);
+		//(*Obj_Det.CNN_YOLO_Obj).setPreferableTarget(DNN_TARGET_OPENCL);	//Only Intel GPU's are supported as yet. So this gives error
+		// Load names of classes
+		string classesFile = "E:\\RnD\\Current_Projects\\Musawwir\\Frameworks\\SW\\CNN\\coco.names";
+		ifstream ifs(classesFile.c_str());
+		string line;
+		while (getline(ifs, line)) Obj_Det.CNN_Classes.push_back(line);
+	}
 
 //	-----------------------------------------------------------------------------------------------------------------
 //  Step 4- Training
 //	printf("\n\tFeature Vector Size = %d", Obj_Det.Feature_Vec_Length);
-	Training_Master(Obj_Det);
+//	Training_Master(Obj_Det);
 	//	goto finish;
 
 //	-----------------------------------------------------------------------------------------------------------------
@@ -79,13 +97,13 @@ int main(void)
 	Obj_Det.monitor_detections = 1;
 
 	Obj_Det.Dataset = Obj_Det.Ped_INRIA;		//288 frames	8274(USA) 4024(USA-Test) 4250(USA-Train)
-//	Obj_Det.Process_Test_Datasets("HSG");
-
-	Obj_Det.Dataset = Obj_Det.Ped_ETH;			//1804 frames
 	Obj_Det.Process_Test_Datasets("HSG");
 
 	Obj_Det.Dataset = Obj_Det.Ped_TUDBrussels;	//508 frames
-//	Obj_Det.Process_Test_Datasets("HSG");
+	Obj_Det.Process_Test_Datasets("YOLO");
+
+	Obj_Det.Dataset = Obj_Det.Ped_ETH;			//1804 frames
+	Obj_Det.Process_Test_Datasets("YOLO");
 
 	//	goto finish;
 

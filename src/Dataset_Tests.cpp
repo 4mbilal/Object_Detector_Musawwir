@@ -21,6 +21,7 @@ void Musawwir_Obj_Detector::Process_Test_Datasets(string Exp) {
 	int sets_cnt = 0, vids_cnt = 0, fr_no = 0;
 	Mat	cur_frame;
 	float pre_scaling = 2;
+	if(Active_Detector_Obj== CNN_YOLO) pre_scaling = 1;
 
 	switch (Dataset) {
 	case Ped_INRIA:
@@ -153,6 +154,8 @@ void Caltech_PDollar_Format_Results(Mat& img, Musawwir_Obj_Detector* MOD, float 
 	case Musawwir_Obj_Detector::HSG:
 		(*MOD->HSG_Obj).MultiScale_Detector(temp, found, scores);
 		break;
+	case Musawwir_Obj_Detector::CNN_YOLO:
+		MOD->CNN_YOLO_Detector((MOD->CNN_YOLO_Obj), img, found, scores);
 	default:
 		break;
 	}
