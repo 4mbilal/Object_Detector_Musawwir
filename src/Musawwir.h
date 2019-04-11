@@ -19,7 +19,7 @@ public:
 	int Active_Detector_Obj;
 	int Active_Obj_Type;
 	int SVM_Type;
-	float Detection_Threshold;
+	float Detection_Threshold=0.0f;
 	float Scale_Stride;
 	Size Spatial_Stride;
 	Size Padding;
@@ -29,6 +29,8 @@ public:
 	float SVM_bias;
 	int Kernel_LUT_Q;
 	int Dataset;
+	vector<Rect> BB_Rects;
+	vector<double> BB_Scores;
 
 	//Dataset evaluations
 	float SVM_training_error;
@@ -46,7 +48,11 @@ public:
 	virtual void Fill_SVM_Wts(string SVM_Model_FilePath);
 	virtual void Fill_SVM_Wts_LUT();
 	virtual void Process_Test_Datasets(string Exp);
-	virtual void CNN_YOLO_Detector(Net *CNN_YOLO_Obj, Mat& Frame, vector<Rect>& BB_Rects, vector<double>& BB_Scores);
+	virtual void CNN_YOLO_Detector(Mat& Frame, vector<Rect>& BB_Rects, vector<double>& BB_Scores);
+	virtual void Co_Detector(Mat& Frame, vector<Rect>& BB_Rects, vector<double>& BB_Scores);
+	virtual void Img_Dir_Test(string dir_path);
+	virtual void Detect(Mat &img);
+	virtual void Vid_Test(string dir_path);
 };
 
 #endif

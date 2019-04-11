@@ -21,7 +21,6 @@ void Musawwir_Obj_Detector::Process_Test_Datasets(string Exp) {
 	int sets_cnt = 0, vids_cnt = 0, fr_no = 0;
 	Mat	cur_frame;
 	float pre_scaling = 2;
-	if(Active_Detector_Obj== CNN_YOLO) pre_scaling = 1;
 
 	switch (Dataset) {
 	case Ped_INRIA:
@@ -51,6 +50,8 @@ void Musawwir_Obj_Detector::Process_Test_Datasets(string Exp) {
 	default:
 		break;
 	}
+
+	if (Active_Detector_Obj == CNN_YOLO) pre_scaling = 1.0;
 
 	printf("\n\n\tProcessing \"%s\" to generate files for Pitor Dollar Matlab Toolbox (ROC plots)\n\n");
 
@@ -100,10 +101,6 @@ void Musawwir_Obj_Detector::Process_Test_Datasets(string Exp) {
 					resize(cur_frame, cur_frame, Size(0, 0), pre_scaling, pre_scaling);
 					//blur(cur_frame, cur_frame, Size(5, 5), Point(-1, -1));
 					Caltech_PDollar_Format_Results(cur_frame, this, pre_scaling, res_file_path, ann_file_path);
-					if (monitor_detections) {
-						imshow("Processed Frame", cur_frame);
-						waitKey(1);
-					}
 					frame_cnt++;
 				}
 					if ((Dataset == Ped_USA) | (Dataset == Ped_USA_Train) | (Dataset == Ped_USA_Test))
@@ -135,58 +132,21 @@ void Musawwir_Obj_Detector::Process_Test_Datasets(string Exp) {
 
 void Caltech_PDollar_Format_Results(Mat& img, Musawwir_Obj_Detector* MOD, float pre_scaling, string res_path, string ann_path)
 {
-	vector<Rect> found;
-	vector<double> scores;
 	ofstream Res_File;
 	Res_File.open(res_path);
-	Mat temp;
-	img.copyTo(temp);
 
-	ftime(&t_start);
-	switch (MOD->Active_Detector_Obj)
-	{
-	case Musawwir_Obj_Detector::HOG_OpenCV_Mod:
-		(*MOD->HOG_OpenCV_Mod_Obj).detectMultiScale(temp, found, scores, MOD->Detection_Threshold, MOD->Spatial_Stride, MOD->Padding, MOD->Scale_Stride, 0, 1);
-		break;
-	case Musawwir_Obj_Detector::HOG_OpenCV:
-		(*MOD->HOG_OpenCV_Obj).detectMultiScale(temp, found, scores, MOD->Detection_Threshold, MOD->Spatial_Stride, MOD->Padding, MOD->Scale_Stride, 0, 1);
-		break;
-	case Musawwir_Obj_Detector::HSG:
-		(*MOD->HSG_Obj).MultiScale_Detector(temp, found, scores);
-		break;
-	case Musawwir_Obj_Detector::CNN_YOLO:
-		MOD->CNN_YOLO_Detector((MOD->CNN_YOLO_Obj), img, found, scores);
-	default:
-		break;
-	}
-	ftime(&t_end);
-	t_elapsed = (float)((t_end.time - t_start.time) * 1000 + (t_end.millitm - t_start.millitm));
-	fps = 0.9*fps + 100 / t_elapsed;
-	char str[10];
-	sprintf(str, "%.01f", fps);
-	cv::putText(img, str, Point(20, 20), CV_FONT_HERSHEY_COMPLEX, 1, Scalar(255, 0, 0), 1, 8);
-
-	if (MOD->monitor_detections) {
-		for (int x = 0; x < scores.size(); x++) {
-			if (scores[x] < 0) continue;
-			Rect detected_bb;
-			char str[50];
-			sprintf(str, "%.02f", scores[x]);
-			detected_bb = found[x];
-			rectangle(img, detected_bb, Scalar(255, 0, 0), 4);
-		}
-	}
+	MOD->Detect(img);
 
 	size_t i;
-	for (i = 0; i < found.size(); i++)
+	for (i = 0; i < MOD->BB_Rects.size(); i++)
 	{
-		Rect r = found[i];
-		if (scores[i] < MOD->Detection_Threshold) continue;
-		found[i].x = (found[i].x / pre_scaling);
-		found[i].y = (found[i].y / pre_scaling);
-		found[i].width = (found[i].width / pre_scaling);
-		found[i].height = (found[i].height / pre_scaling);
-		Res_File << found[i].x << "," << found[i].y << "," << found[i].width << "," << found[i].height << "," << scores[i] << endl;
+		Rect r = MOD->BB_Rects[i];
+		if (MOD->BB_Scores[i] < MOD->Detection_Threshold) continue;
+		MOD->BB_Rects[i].x = (MOD->BB_Rects[i].x / pre_scaling);
+		MOD->BB_Rects[i].y = (MOD->BB_Rects[i].y / pre_scaling);
+		MOD->BB_Rects[i].width = (MOD->BB_Rects[i].width / pre_scaling);
+		MOD->BB_Rects[i].height = (MOD->BB_Rects[i].height / pre_scaling);
+		Res_File << MOD->BB_Rects[i].x << "," << MOD->BB_Rects[i].y << "," << MOD->BB_Rects[i].width << "," << MOD->BB_Rects[i].height << "," << MOD->BB_Scores[i] << endl;
 	}
 	Res_File.close();
 
@@ -203,44 +163,44 @@ void Caltech_PDollar_Format_Results(Mat& img, Musawwir_Obj_Detector* MOD, float 
 		MOD->total_objects += gt.size();
 
 		//3- Sort detections according to their scores because later only the highest matching scorer will be picked starting from top
-		if (found.size() > 1) {
-			for (int i = 0; i < found.size() - 1; i++) {
-				for (int j = i + 1; j < found.size(); j++) {
-					if (scores[j] > scores[i]) {
-						double temp_s = scores[i];
-						scores[i] = scores[j];
-						scores[j] = temp_s;
-						Rect temp_r = found[i];
-						found[i] = found[j];
-						found[j] = temp_r;
+		if (MOD->BB_Rects.size() > 1) {
+			for (int i = 0; i < MOD->BB_Rects.size() - 1; i++) {
+				for (int j = i + 1; j < MOD->BB_Rects.size(); j++) {
+					if (MOD->BB_Scores[j] > MOD->BB_Scores[i]) {
+						double temp_s = MOD->BB_Scores[i];
+						MOD->BB_Scores[i] = MOD->BB_Scores[j];
+						MOD->BB_Scores[j] = temp_s;
+						Rect temp_r = MOD->BB_Rects[i];
+						MOD->BB_Rects[i] = MOD->BB_Rects[j];
+						MOD->BB_Rects[j] = temp_r;
 					}
 				}
 			}
 		}
 
 		//4- Initialize datastructure to label all detections as FP(0) or TP(1)
-		int* ftp = new int[found.size()];
-		for (int i = 0; i < found.size(); i++) ftp[i] = 0;	//By default all detections are false positives (0)
+		int* ftp = new int[MOD->BB_Rects.size()];
+		for (int i = 0; i < MOD->BB_Rects.size(); i++) ftp[i] = 0;	//By default all detections are false positives (0)
 
 		//5- Search for the first detection (highest score) that overlaps (50%) with each annotation. Label these detections as TP(1)
 		for (int x = 0; x < gt.size(); x++) {
 			Rect gt_bb = gt[x];
-			for (int y = 0; y < found.size(); y++) {
-				Rect dt_bb = found[y];
+			for (int y = 0; y < MOD->BB_Rects.size(); y++) {
+				Rect dt_bb = MOD->BB_Rects[y];
 				Rect a = gt_bb & dt_bb;	//intersection between ground truth and detection
 				Rect b = gt_bb | dt_bb;	//union
 //				if (a.area()>(b.area()*0.25)) {		//if intersection area is greater than some 50 % of union area, it's a match!!
 				if ((double)a.area()>(double)(gt_bb.area()+ dt_bb.area()- a.area())*0.25) {		//if intersection area is greater than some 50 % of union area, it's a match!!
 					ftp[y] = 1;
-					MOD->TP_scores.push_back(scores[y]);
+					MOD->TP_scores.push_back(MOD->BB_Scores[y]);
 					break;		//The top scoring detection has been found. All the others are False Positives. So, break here. 
 				}
 			}
 		}
 		//6- All the remaining detections get listed as FP
-		for (int y = 0; y < found.size(); y++) {
+		for (int y = 0; y < MOD->BB_Rects.size(); y++) {
 			if (ftp[y] == 0) {
-				MOD->FP_scores.push_back(scores[y]);
+				MOD->FP_scores.push_back(MOD->BB_Scores[y]);
 			}
 		}
 		delete ftp;

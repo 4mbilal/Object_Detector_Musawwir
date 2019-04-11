@@ -8,10 +8,9 @@ using namespace dnn;
 using namespace std;
 
 // Initialize the parameters
-float confThreshold = 0.5; // Confidence threshold
-float nmsThreshold = 0.4;  // Non-maximum suppression threshold
-int inpWidth = 416;  // Width of network's input image
-int inpHeight = 416; // Height of network's input image
+float nmsThreshold = 0.3f;  // Non-maximum suppression threshold
+int inpWidth = 416; //608;//640;//    // Width of network's input image
+int inpHeight = 416; //608;//480;// 608;//  // Height of network's input image
 vector<string> classes;
 
 // Get the names of the output layers
@@ -34,8 +33,14 @@ vector<String> getOutputsNames(const Net& net)
 	return names;
 }
 
-void Musawwir_Obj_Detector::CNN_YOLO_Detector(Net *CNN_YOLO_Obj, Mat& Frame, vector<Rect>& BB_Rects, vector<double>& BB_Scores) {
+void Musawwir_Obj_Detector::Co_Detector(Mat& Frame, vector<Rect>& BB_Rects, vector<double>& BB_Scores) {
+
+}
+
+void Musawwir_Obj_Detector::CNN_YOLO_Detector(Mat& Frame, vector<Rect>& BB_Rects, vector<double>& BB_Scores) {
 	Mat blob;
+//	cout << Frame.size().height<<endl;
+	
 	blobFromImage(Frame, blob, 1 / 255.0, cvSize(inpWidth, inpHeight), Scalar(0, 0, 0), true, false);
 
 	//Sets the input to the network
@@ -63,7 +68,8 @@ void Musawwir_Obj_Detector::CNN_YOLO_Detector(Net *CNN_YOLO_Obj, Mat& Frame, vec
 			double confidence;
 			// Get the value and location of the maximum score
 			minMaxLoc(scores, 0, &confidence, 0, &classIdPoint);
-			if (confidence > confThreshold)
+//			cout << confidence << endl;
+			if (confidence > Detection_Threshold)
 			{
 				int centerX = (int)(data[0] * Frame.cols);
 				int centerY = (int)(data[1] * Frame.rows);
@@ -81,7 +87,8 @@ void Musawwir_Obj_Detector::CNN_YOLO_Detector(Net *CNN_YOLO_Obj, Mat& Frame, vec
 
 	//Non-Maxima Suppression
 	vector<int> indices;
-	NMSBoxes(boxes, confidences, confThreshold, nmsThreshold, indices);
+	NMSBoxes(boxes, confidences, Detection_Threshold, nmsThreshold, indices);
+	
 	for (size_t i = 0; i < indices.size(); ++i)
 	{
 		int idx = indices[i];
@@ -94,10 +101,11 @@ void Musawwir_Obj_Detector::CNN_YOLO_Detector(Net *CNN_YOLO_Obj, Mat& Frame, vec
 	}
 
 	// Put efficiency information. The function getPerfProfile returns the overall time for inference(t) and the timings for each of the layers(in layersTimes)
-	vector<double> layersTimes;
+	/*vector<double> layersTimes;
 	double freq = getTickFrequency() / 1000;
 	double t = CNN_YOLO_Obj->getPerfProfile(layersTimes) / freq;
 	string label = format("Inference time for a frame : %.2f ms", t);
-	putText(Frame, label, Point(0, 15), FONT_HERSHEY_SIMPLEX, 0.5, Scalar(0, 0, 255));
+	putText(Frame, label, Point(0, 15), FONT_HERSHEY_SIMPLEX, 0.5, Scalar(0, 0, 255));*/
+	//getchar();
 }
 

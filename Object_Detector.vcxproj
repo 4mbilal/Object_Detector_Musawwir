@@ -167,6 +167,7 @@
     <ClCompile Include="src\HSG_HIK.cpp" />
     <ClCompile Include="src\Image_Utilities.cpp" />
     <ClCompile Include="src\Main.cpp" />
+    <ClCompile Include="src\Musawwir.cpp" />
     <ClCompile Include="src\NMS.cpp" />
     <ClCompile Include="src\CNN_YOLO.cpp" />
     <ClCompile Include="src\SVM_interface.cpp" />

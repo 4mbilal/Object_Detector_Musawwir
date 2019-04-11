@@ -7,7 +7,6 @@
 #endif
 #include "SVM_Wts_Matlab.h"
 void float_companding_test(void);
-extern int Yolo_V3_test();
 
 int main(void)
 {
@@ -19,7 +18,7 @@ int main(void)
 	Obj_Det.Scale_Stride = 1.05;	//pow(2.0, (1.0 / 8.0)); //
 	Obj_Det.Spatial_Stride = Size(8, 8);
 	Obj_Det.Padding = Size(24, 24);
-	Obj_Det.Detection_Threshold = 0;
+	Obj_Det.Detection_Threshold = 0.0;
 
 //	-----------------------------------------------------------------------------------------------------------------
 //	Step 2- Select the Feature (or the NN Framework e.g. YOLO)
@@ -68,8 +67,10 @@ int main(void)
 	}
 	else if (Obj_Det.Active_Detector_Obj == Obj_Det.CNN_YOLO) {
 		// Load the network
-		String modelConfiguration = "E:\\RnD\\Current_Projects\\Musawwir\\Frameworks\\SW\\CNN\\yolov3.cfg";
-		String modelWeights = "E:\\RnD\\Current_Projects\\Musawwir\\Frameworks\\SW\\CNN\\yolov3.weights";
+		String modelConfiguration = "E:\\RnD\\Current_Projects\\Musawwir\\Frameworks\\SW\\CNN\\yolov3-tiny.cfg";
+		String modelWeights = "E:\\RnD\\Current_Projects\\Musawwir\\Frameworks\\SW\\CNN\\yolov3-tiny.weights";
+//		String modelConfiguration = "E:\\RnD\\Current_Projects\\Musawwir\\Frameworks\\SW\\CNN\\yolov3.cfg";
+//		String modelWeights = "E:\\RnD\\Current_Projects\\Musawwir\\Frameworks\\SW\\CNN\\yolov3.weights";
 		(*Obj_Det.CNN_YOLO_Obj) = readNetFromDarknet(modelConfiguration, modelWeights);
 		(*Obj_Det.CNN_YOLO_Obj).setPreferableBackend(DNN_BACKEND_OPENCV);
 		(*Obj_Det.CNN_YOLO_Obj).setPreferableTarget(DNN_TARGET_CPU);
@@ -95,17 +96,23 @@ int main(void)
 //  Step 6- Testing on Datasets etc.
 //	Obj_Det.load_show_annotations = 1;
 	Obj_Det.monitor_detections = 1;
+	//Obj_Det.Img_Dir_Test("E:\\RnD\\Current_Projects\\Musawwir\\Frameworks\\SW\\Dataset\\Person\\Caltech\\code\\data-INRIA\\images\\set00\\V000\\");
+//	Obj_Det.Img_Dir_Test("E:\\RnD\\Current_Projects\\Musawwir\\Frameworks\\SW\\Dataset\\Person\\test_images\\2\\");
+//	Obj_Det.Vid_Test("E:\\RnD\\Current_Projects\\Musawwir\\Frameworks\\SW\\Dataset\\Person\\others\\2012_10_11_143333_Starting.avi");
 
 	Obj_Det.Dataset = Obj_Det.Ped_INRIA;		//288 frames	8274(USA) 4024(USA-Test) 4250(USA-Train)
-	Obj_Det.Process_Test_Datasets("HSG");
+//	Obj_Det.Process_Test_Datasets("YOLO");
 
 	Obj_Det.Dataset = Obj_Det.Ped_TUDBrussels;	//508 frames
-	Obj_Det.Process_Test_Datasets("YOLO");
+//	Obj_Det.Process_Test_Datasets("YOLO");
 
 	Obj_Det.Dataset = Obj_Det.Ped_ETH;			//1804 frames
-	Obj_Det.Process_Test_Datasets("YOLO");
+//	Obj_Det.Process_Test_Datasets("YOLO");
 
-	//	goto finish;
+	Obj_Det.Dataset = Obj_Det.Ped_USA;			//1804 frames
+//	Obj_Det.Process_Test_Datasets("YOLO");
+
+//	goto finish;
 
 //	Code dumps below, cleanup when have time
 //	hog_mod_test();
